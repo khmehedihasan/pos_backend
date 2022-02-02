@@ -26,6 +26,7 @@ app.get('/', async (req,res,next)=>{
 
 
 app.use('/user',require('./src/Routers/user'));
+app.use('/supplier',require('./src/Routers/supplier'));
 
 
 
