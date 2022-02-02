@@ -23,14 +23,23 @@ app.get('/', async (req,res,next)=>{
 })
 
 
-
+//----------------------------------------------------Routers-----------------------------------------------------
 
 app.use('/user',require('./src/Routers/user'));
 app.use('/supplier',require('./src/Routers/supplier'));
+app.use('/customer', require('./src/Routers/customer'))
 
 
 
+
+
+
+
+//----------------------------------------------Error handler------------------------------------------------
 app.use(require('./src/Middlewares/errorHandler'));
+
+
+
 
 app.listen(process.env.PORT,()=>{
     console.log(`App is running on port ${process.env.PORT}...`);
