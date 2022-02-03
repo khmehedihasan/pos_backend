@@ -29,6 +29,10 @@ const supplierSchema = mongoose.Schema({
     due:{
         type:String,
         default:"0"
+    },
+    date:{
+        type:Date,
+        default:Date.now()
     }
 });
 

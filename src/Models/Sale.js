@@ -1,19 +1,19 @@
 const mongoose = require('mongoose');
 
-const purchaseSchema = mongoose.Schema({
+const saleSchema = mongoose.Schema({
     product:{
         type:mongoose.Types.ObjectId,
         ref:"Product"
     },
-    supplier:{
+    customer:{
         type:mongoose.Types.ObjectId,
-        ref:"Supplier"
+        ref:"Customer"
     },
-    payable:{
+    receivable:{
         type:String,
         require:true
     },
-    payed:{
+    received:{
         type:String,
         require:true
     },
@@ -33,6 +33,6 @@ const purchaseSchema = mongoose.Schema({
 });
 
 
-const Purchase = mongoose.model("Purchase", purchaseSchema);
+const Sale = mongoose.model("Sale", saleSchema);
 
-module.exports = Purchase;
+module.exports = Sale;
