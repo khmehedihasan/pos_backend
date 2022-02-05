@@ -8,6 +8,10 @@ app.use(express.json({
     type:['application/json','text/plain','application/x-www-form-urlencoded']
 }))
 
+app.use(require('./src/Middlewares/allowHeaders'));
+
+app.use('/public/upload',express.static('./src/upload'));
+
 
 app.get('/', async (req,res,next)=>{
 
@@ -48,6 +52,7 @@ app.use('/sale', require('./src/Routers/sale'));
 
 
 //----------------------------------------------Error handler------------------------------------------------
+
 app.use(require('./src/Middlewares/errorHandler'));
 
 

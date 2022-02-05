@@ -5,7 +5,9 @@ const Category = require('../Models/Category');
 
 exports.addCategory = async (req,res,next)=>{
     try{
-        res.send("ok");
+        console.log(req.body)
+        console.log(req.file.filename)
+        res.send("category add");
     }catch(error){
         next(error);
     }
