@@ -18,8 +18,6 @@ exports.addCategory = async (req,res,next)=>{
 
         const d = await data.save();
 
-        console.log(d)
-
         if(d != {}){
             res.send({status:true,message:"Category added successfully."});
         }else{
@@ -36,7 +34,12 @@ exports.addCategory = async (req,res,next)=>{
 
 exports.allCategory = async (req,res,next)=>{
     try{
-        res.send("ok");
+        const data = await Category.find().select({__v:0})
+        if(data.length<1){
+            res.status(400).send({status:false,message:"Category not found."});
+        }else{
+            res.json({status:true,data});
+        }
     }catch(errro){
         next(error);
     }
