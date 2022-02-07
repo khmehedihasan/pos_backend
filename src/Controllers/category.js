@@ -1,3 +1,4 @@
+require('dotenv').config();
 const Category = require('../Models/Category');
 
 
@@ -5,9 +6,26 @@ const Category = require('../Models/Category');
 
 exports.addCategory = async (req,res,next)=>{
     try{
-        console.log(req.body)
-        console.log(req.file.filename)
-        res.send("category add");
+        const photo = req.file.filename;
+        const image = process.env.PUBLIC_LINK+req.file.filename;
+
+        const data = await Category({
+            name:req.body.name,
+            description:req.body.description,
+            img:image,
+            photo:photo
+        });
+
+        const d = await data.save();
+
+        console.log(d)
+
+        if(d != {}){
+            res.send({status:true,message:"Category added successfully."});
+        }else{
+            res.send({status:true,message:"Category added successfully."});
+        }
+        
     }catch(error){
         next(error);
     }
