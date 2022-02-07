@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const subcategory = require('../Controllers/subcategory');
+const subcategory = require('../Controllers/subCategory');
 
 router.get('/', subcategory.allSubCategory);
 

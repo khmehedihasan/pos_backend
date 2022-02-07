@@ -14,7 +14,6 @@ app.use('/public/upload',express.static('./src/upload'));
 
 
 app.get('/', async (req,res,next)=>{
-    console.log('run')
 
    try{
 
@@ -38,7 +37,7 @@ app.use('/customer', require('./src/Routers/customer'));
 
 app.use('/category', require('./src/Routers/category'));
 
-// app.use('/subCategory', require('./src/Routers/subCategory'));
+app.use('/subCategory', require('./src/Routers/subCategory'));
 
 app.use('/product', require('./src/Routers/product'));
 
