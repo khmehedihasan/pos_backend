@@ -12,6 +12,6 @@ router.post('/', uploadPhoto.single('photo') ,category.addCategory)
 
 router.put('/:id', validObjectId, uploadPhoto.single('photo') ,category.updateCategory);
 
-router.delete('/', category.deleteCategory);
+router.delete('/:id', validObjectId, category.deleteCategory);
 
 module.exports = router;
