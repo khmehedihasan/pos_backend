@@ -36,14 +36,14 @@ exports.addCategory = async (req,res,next)=>{
 exports.allCategory = async (req,res,next)=>{
     try{
 
-        const data = await Category.find().select({__v:0})
+        const data = await Category.find().select({__v:0});
         if(data.length<1){
             res.status(400).send({status:false,message:"Category not found."});
         }else{
             res.json({status:true,data});
         }
 
-    }catch(errro){
+    }catch(error){
         next(error);
     }
 }
@@ -109,7 +109,33 @@ exports.updateCategory = async (req,res,next)=>{
 
 exports.deleteCategory = async (req,res,next)=>{
     try{
-        res.send("ok");
+
+        const d = await Category.findById(req.params.id).populate('subCategorys');
+
+        if(d == null){
+            res.status(400).send({status:false,message:"Category not found."});
+        }else{
+            const subCategorys = d.subCategorys.length;
+            if(subCategorys > 0){
+                res.status(400).send({status:false,message:`${subCategorys} subcategory found under this category. So, can not delete this category.`});
+            }else{
+
+                const data = await Category.findByIdAndDelete(req.params.id);
+                if(data == null){
+                    await res.status(400).send({status:false,message:"Faild to delete Category."});
+                }
+                else{
+                    await fs.unlink('./src/upload/'+data.photo,(error)=>{
+                        if(error){
+                            next(error);
+                        }
+                    })
+                    res.json({status:true,message:'Category delete successfully.'});
+                }
+
+            }
+        }
+
     }catch(error){
         next(error);
     }
