@@ -1,5 +1,6 @@
 require('dotenv').config();
 const Category = require('../Models/Category');
+const fs = require('fs');
 
 
 //-------------------------------------------------------add Category------------------------------------------------
@@ -69,7 +70,35 @@ exports.singleCategory = async (req,res,next)=>{
 
 exports.updateCategory = async (req,res,next)=>{
     try{
-        res.send("ok");
+        const photo = req.file.filename;
+        const image = process.env.PUBLIC_LINK+req.file.filename;
+
+        const data = await Category.findByIdAndUpdate(req.params.id,{$set:{
+            name:req.body.name,
+            description:req.body.description,
+            img:image,
+            photo:photo
+        }});
+
+        if(data == null){
+
+            await fs.unlink('./src/upload/'+photo,(error)=>{
+                if(error){
+                    next(error);
+                }
+            });
+            res.status(400).send({status:false,message:"Category not found."});
+
+        }else{
+
+            await fs.unlink('./src/upload/'+data.photo,(error)=>{
+                if(error){
+                    next(error);
+                }
+            });
+            res.json({status:true,message:'Category update successfully.'});
+        }
+
     }catch(error){
         next(error);
     }
