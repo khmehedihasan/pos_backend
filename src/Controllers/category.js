@@ -7,23 +7,43 @@ const fs = require('fs');
 
 exports.addCategory = async (req,res,next)=>{
     try{
-        const photo = req.file.filename;
-        const image = process.env.PUBLIC_LINK+req.file.filename;
 
-        const data = await Category({
-            name:req.body.name,
-            description:req.body.description,
-            img:image,
-            photo:photo
-        });
+        
+        if(req.file == undefined){
 
-        const d = await data.save();
+            const data = await Category({
+                name:req.body.name,
+                description:req.body.description
+            });
+    
+            const d = await data.save();
+    
+            if(d != {}){
+                res.send({status:true,message:"Category added successfully."});
+            }else{
+                res.send({status:true,message:"Faild to added Category."});
+            }
 
-        if(d != {}){
-            res.send({status:true,message:"Category added successfully."});
         }else{
-            res.send({status:true,message:"Category added successfully."});
+            const photo = req.file.filename;
+            const image = process.env.PUBLIC_LINK+req.file.filename;
+            const data = await Category({
+                name:req.body.name,
+                description:req.body.description,
+                img:image,
+                photo:photo
+            });
+    
+            const d = await data.save();
+    
+            if(d != {}){
+                res.send({status:true,message:"Category added successfully."});
+            }else{
+                res.send({status:true,message:"Faild to added Category."});
+            }
         }
+
+
         
     }catch(error){
         next(error);
