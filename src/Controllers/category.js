@@ -8,7 +8,6 @@ const fs = require('fs');
 exports.addCategory = async (req,res,next)=>{
     try{
 
-        
         if(req.file == undefined){
 
             const data = await Category({
@@ -90,34 +89,55 @@ exports.singleCategory = async (req,res,next)=>{
 
 exports.updateCategory = async (req,res,next)=>{
     try{
-        const photo = req.file.filename;
-        const image = process.env.PUBLIC_LINK+req.file.filename;
+        if(req.file == undefined){
 
-        const data = await Category.findByIdAndUpdate(req.params.id,{$set:{
-            name:req.body.name,
-            description:req.body.description,
-            img:image,
-            photo:photo
-        }});
+            const data = await Category.findByIdAndUpdate(req.params.id,{$set:{
+                name:req.body.name,
+                description:req.body.description
+            }});
 
-        if(data == null){
-
-            await fs.unlink('./src/upload/'+photo,(error)=>{
-                if(error){
-                    next(error);
-                }
-            });
-            res.status(400).send({status:false,message:"Category not found."});
+            if(data == null){
+    
+                res.status(400).send({status:false,message:"Category not found."});
+    
+            }else{
+    
+                res.json({status:true,message:'Category update successfully.'});
+            }
 
         }else{
-
-            await fs.unlink('./src/upload/'+data.photo,(error)=>{
-                if(error){
-                    next(error);
+            const photo = req.file.filename;
+            const image = process.env.PUBLIC_LINK+req.file.filename;
+    
+            const data = await Category.findByIdAndUpdate(req.params.id,{$set:{
+                name:req.body.name,
+                description:req.body.description,
+                img:image,
+                photo:photo
+            }});
+    
+            if(data == null){
+    
+                await fs.unlink('./src/upload/'+photo,(error)=>{
+                    if(error){
+                        next(error);
+                    }
+                });
+                res.status(400).send({status:false,message:"Category not found."});
+    
+            }else{
+                if(data.photo){
+                    await fs.unlink('./src/upload/'+data.photo,(error)=>{
+                        if(error){
+                            next(error);
+                        }
+                    });
                 }
-            });
-            res.json({status:true,message:'Category update successfully.'});
+
+                res.json({status:true,message:'Category update successfully.'});
+            }
         }
+
 
     }catch(error){
         next(error);
@@ -145,11 +165,13 @@ exports.deleteCategory = async (req,res,next)=>{
                     await res.status(400).send({status:false,message:"Faild to delete Category."});
                 }
                 else{
-                    await fs.unlink('./src/upload/'+data.photo,(error)=>{
-                        if(error){
-                            next(error);
-                        }
-                    })
+                    if(data.photo){
+                        await fs.unlink('./src/upload/'+data.photo,(error)=>{
+                            if(error){
+                                next(error);
+                            }
+                        });
+                    }
                     res.json({status:true,message:'Category delete successfully.'});
                 }
 
