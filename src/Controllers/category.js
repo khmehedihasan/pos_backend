@@ -118,8 +118,8 @@ exports.updateCategory = async (req,res,next)=>{
     
             if(data == null){
     
-                await fs.unlink('./src/upload/'+photo,(error)=>{
-                    if(error){
+                fs.unlink('./src/upload/' + photo, (error) => {
+                    if (error) {
                         next(error);
                     }
                 });
@@ -127,8 +127,8 @@ exports.updateCategory = async (req,res,next)=>{
     
             }else{
                 if(data.photo){
-                    await fs.unlink('./src/upload/'+data.photo,(error)=>{
-                        if(error){
+                    fs.unlink('./src/upload/' + data.photo, (error) => {
+                        if (error) {
                             next(error);
                         }
                     });
@@ -166,8 +166,8 @@ exports.deleteCategory = async (req,res,next)=>{
                 }
                 else{
                     if(data.photo){
-                        await fs.unlink('./src/upload/'+data.photo,(error)=>{
-                            if(error){
+                        fs.unlink('./src/upload/' + data.photo, (error) => {
+                            if (error) {
                                 next(error);
                             }
                         });
