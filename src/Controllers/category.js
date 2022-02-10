@@ -55,7 +55,7 @@ exports.addCategory = async (req,res,next)=>{
 exports.allCategory = async (req,res,next)=>{
     try{
 
-        const data = await Category.find().select({__v:0});
+        const data = await Category.find().select({__v:0}).populate('subCategorys','name description img');
         if(data.length<1){
             res.status(400).send({status:false,message:"Category not found."});
         }else{
@@ -72,7 +72,7 @@ exports.allCategory = async (req,res,next)=>{
 exports.singleCategory = async (req,res,next)=>{
     try{
 
-        const data = await Category.find({_id:req.params.id}).select({__v:0})
+        const data = await Category.find({_id:req.params.id}).select({__v:0}).populate('subCategorys','name description img');
         if(data.length<1){
             res.status(400).send({status:false,message:"Category not found."});
         }else{
