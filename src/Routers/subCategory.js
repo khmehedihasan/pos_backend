@@ -12,7 +12,7 @@ router.get('/:id', validObjectId, subCategory.singleSubCategory);
 
 router.post('/', uploadPhoto.single('photo'), subCategory.addSubCategory)
 
-router.put('/', validObjectId, uploadPhoto.single('photo'), subCategory.updateSubCategory);
+router.put('/:id', validObjectId, uploadPhoto.single('photo'), subCategory.updateSubCategory);
 
 router.delete('/:id', validObjectId, subCategory.deleteSubCategory);
 
