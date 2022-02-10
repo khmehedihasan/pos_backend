@@ -1,5 +1,6 @@
 const SubCategory = require('../Models/SubCategory');
 const Category = require('../Models/Category');
+const fs = require('fs');
 
 
 //-------------------------------------------------------add SubCategory------------------------------------------------
@@ -102,7 +103,33 @@ exports.updateSubCategory = async (req,res,next)=>{
 
 exports.deleteSubCategory = async (req,res,next)=>{
     try{
-        res.send("ok");
+        const d = await SubCategory.findById(req.params.id).populate('products');
+
+        if(d == null){
+            res.status(400).send({status:false,message:"Sub Category not found."});
+        }else{
+            const products = d.products.length;
+            if(products > 0){
+                res.status(400).send({status:false,message:`${products} product found under this category. So, can not delete this Sub category.`});
+            }else{
+
+                const data = await SubCategory.findByIdAndDelete(req.params.id);
+                if(data == null){
+                    await res.status(400).send({status:false,message:"Faild to delete Sub Category."});
+                }
+                else{
+                    if(data.photo){
+                        await fs.unlink('./src/upload/'+data.photo,(error)=>{
+                            if(error){
+                                next(error);
+                            }
+                        });
+                    }
+                    res.json({status:true,message:'Sub Category delete successfully.'});
+                }
+
+            }
+        }
     }catch(error){
         next(error);
     }
