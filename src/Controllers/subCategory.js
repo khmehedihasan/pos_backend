@@ -58,8 +58,15 @@ exports.addSubCategory = async (req,res,next)=>{
 
 exports.allSubCategory = async (req,res,next)=>{
     try{
-        res.send("ok");
-    }catch(errro){
+        
+        const data = await SubCategory.find().select({__v:0}).populate('category','name description');
+        if(data.length<1){
+            res.status(400).send({status:false,message:"Sub Category not found."});
+        }else{
+            res.json({status:true,data});
+        }
+
+    }catch(error){
         next(error);
     }
 }
