@@ -118,6 +118,7 @@ exports.deleteSubCategory = async (req,res,next)=>{
                     await res.status(400).send({status:false,message:"Faild to delete Sub Category."});
                 }
                 else{
+                    await Category.findByIdAndUpdate(data.category._id,{$pull:{subCategorys:data._id}});
                     if(data.photo){
                         await fs.unlink('./src/upload/'+data.photo,(error)=>{
                             if(error){
