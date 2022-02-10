@@ -112,7 +112,7 @@ exports.updateCategory = async (req,res,next)=>{
             const data = await Category.findByIdAndUpdate(req.params.id,{$set:{
                 name:req.body.name,
                 description:req.body.description,
-                img:image,
+                img:image, 
                 photo:photo
             }});
     
