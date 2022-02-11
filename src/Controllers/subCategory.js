@@ -62,7 +62,7 @@ exports.allSubCategory = async (req,res,next)=>{
         
         const data = await SubCategory.find().select({__v:0}).populate('category','name description img');
         if(data.length<1){
-            res.status(400).send({status:false,message:"Sub Category not found."});
+            res.status(404).send({status:false,message:"Sub Category not found."});
         }else{
             res.json({status:true,data});
         }
@@ -77,8 +77,9 @@ exports.allSubCategory = async (req,res,next)=>{
 exports.singleSubCategory = async (req,res,next)=>{
     try{
         const data = await SubCategory.findById(req.params.id).select({__v:0}).populate('category','name description img');
-        if(data.length<1){
-            res.status(400).send({status:false,message:"Sub Category not found."});
+
+        if(data == null){
+            res.status(404).send({status:false,message:"Sub Category not found."});
         }else{
             res.json({status:true,data});
         }
@@ -92,7 +93,88 @@ exports.singleSubCategory = async (req,res,next)=>{
 
 exports.updateSubCategory = async (req,res,next)=>{
     try{
-        res.send("ok");
+        if(req.file == undefined){
+
+
+            const data = await SubCategory.findByIdAndUpdate(req.params.id,{$set:{
+                name:req.body.name,
+                description:req.body.description,
+                category:req.body.categoryId
+            }}).populate('category','name');
+
+
+            if(data == null){
+    
+                res.status(404).send({status:false,message:"Sub Category not found."});
+    
+            }else{
+
+                if(req.body.categoryId == undefined || req.body.categoryId == ''){
+
+                    res.json({status:true,message:'Sub Category update successfully.'});
+                    
+                }else{
+                    const dc = await Category.findByIdAndUpdate(req.body.categoryId,{$addToSet:{subCategorys:data._id}});
+                    res.json({status:true,message:'Sub Category update successfully.'});
+
+                    if((req.body.categoryId != data.category._id)){
+
+                        const dcc = await Category.findByIdAndUpdate(data.category._id,{$pull:{subCategorys:data._id}});
+
+                    }
+                }
+
+            }
+
+        }else{
+            const photo = req.file.filename;
+            const image = process.env.PUBLIC_LINK+req.file.filename;
+    
+            const data = await SubCategory.findByIdAndUpdate(req.params.id,{$set:{
+                name:req.body.name,
+                description:req.body.description,
+                img:image, 
+                photo:photo,
+                category:req.body.categoryId
+            }});
+    
+            if(data == null){
+    
+                fs.unlink('./src/upload/' + photo, (error) => {
+                    if (error) {
+                        next(error);
+                    }
+                });
+                res.status(404).send({status:false,message:"Sub Category not found."});
+    
+            }else{
+                
+                if(data.photo){
+                    fs.unlink('./src/upload/' + data.photo, (error) => {
+                        if (error) {
+                            next(error);
+                        }
+                    });
+                }
+
+                if(req.body.categoryId == undefined || req.body.categoryId == ''){
+
+                    res.json({status:true,message:'Sub Category update successfully.'});
+                    
+                }else{
+                    const dc = await Category.findByIdAndUpdate(req.body.categoryId,{$addToSet:{subCategorys:data._id}});
+                    res.json({status:true,message:'Sub Category update successfully.'});
+
+                    if((req.body.categoryId != data.category._id)){
+
+                        const dcc = await Category.findByIdAndUpdate(data.category._id,{$pull:{subCategorys:data._id}});
+
+                    }
+                }
+
+            }
+        }
+
     }catch(error){
         next(error);
     }
@@ -106,7 +188,7 @@ exports.deleteSubCategory = async (req,res,next)=>{
         const d = await SubCategory.findById(req.params.id).populate('products');
 
         if(d == null){
-            res.status(400).send({status:false,message:"Sub Category not found."});
+            res.status(404).send({status:false,message:"Sub Category not found."});
         }else{
             const products = d.products.length;
             if(products > 0){
@@ -120,8 +202,8 @@ exports.deleteSubCategory = async (req,res,next)=>{
                 else{
                     await Category.findByIdAndUpdate(data.category._id,{$pull:{subCategorys:data._id}});
                     if(data.photo){
-                        await fs.unlink('./src/upload/'+data.photo,(error)=>{
-                            if(error){
+                        fs.unlink('./src/upload/' + data.photo, (error) => {
+                            if (error) {
                                 next(error);
                             }
                         });
