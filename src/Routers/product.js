@@ -1,15 +1,18 @@
 const express = require('express');
 const router = express.Router();
 const product = require('../Controllers/product');
+const validObjectId = require('../Middlewares/validObjectId');
+const uploadPhoto = require('../Middlewares/uploadPhoto');
+
 
 router.get('/', product.allProduct);
 
-router.get('/:id', product.singleProduct);
+router.get('/:id', validObjectId, product.singleProduct);
 
-router.post('/', product.addProduct)
+router.post('/', uploadPhoto.single('photo'), product.addProduct)
 
-router.put('/', product.updateProduct);
+router.put('/:id', validObjectId, uploadPhoto.single('photo'), product.updateProduct);
 
-router.delete('/', product.deleteProduct);
+router.delete('/:id', validObjectId, product.deleteProduct);
 
 module.exports = router;
