@@ -1,5 +1,6 @@
 const Product = require('../Models/Product');
 const SubCategory = require('../Models/SubCategory');
+const fs = require('fs')
 
 
 //-------------------------------------------------------add Product------------------------------------------------
@@ -65,7 +66,7 @@ exports.allProduct = async (req,res,next)=>{
     try{
         const data = await Product.find().select({__v:0}).populate('subCategory','name description img');
         if(data.length<1){
-            res.status(404).send({status:false,message:"Sub Category not found."});
+            res.status(404).send({status:false,message:"Product not found."});
         }else{
             res.json({status:true,data});
         }
@@ -78,10 +79,10 @@ exports.allProduct = async (req,res,next)=>{
 
 exports.singleProduct = async (req,res,next)=>{
     try{
-        const data = await Product.findById(req.params.id).select({__v:0}).populate('category','name description img');
+        const data = await Product.findById(req.params.id).select({__v:0}).populate('subCategory','name description img');
 
         if(data == null){
-            res.status(404).send({status:false,message:"Sub Category not found."});
+            res.status(404).send({status:false,message:"Product not found."});
         }else{
             res.json({status:true,data});
         }
@@ -95,7 +96,92 @@ exports.singleProduct = async (req,res,next)=>{
 
 exports.updateProduct = async (req,res,next)=>{
     try{
-        res.send("ok");
+
+        if(req.file == undefined){
+
+
+            const data = await Product.findByIdAndUpdate(req.params.id,{$set:{
+                name:req.body.name,
+                description:req.body.description,
+                purchasePrice:req.body.purchasePrice,
+                salePrice:req.body.salePrice,
+                subCategory: req.body.subCategoryId
+            }}).populate('subCategory','name');
+
+
+            if(data == null){
+    
+                res.status(404).send({status:false,message:"Product not found."});
+    
+            }else{
+
+                if(req.body.subCategoryId == undefined || req.body.subCategoryId == ''){
+
+                    res.json({status:true,message:'Product update successfully.'});
+                    
+                }else{
+                    const dc = await SubCategory.findByIdAndUpdate(req.body.subCategoryId,{$addToSet:{products:data._id}});
+                    res.json({status:true,message:'Product update successfully.'});
+
+                    if((req.body.subCategoryId != data.subCategory._id)){
+
+                        const dcc = await SubCategory.findByIdAndUpdate(data.subCategory._id,{$pull:{products:data._id}});
+
+                    }
+                }
+
+            }
+
+        }else{
+            const photo = req.file.filename;
+            const image = process.env.PUBLIC_LINK+req.file.filename;
+    
+            const data = await Product.findByIdAndUpdate(req.params.id,{$set:{
+                name:req.body.name,
+                description:req.body.description,
+                purchasePrice:req.body.purchasePrice,
+                salePrice:req.body.salePrice,
+                subCategory: req.body.subCategoryId,
+                img:image, 
+                photo:photo
+            }});
+    
+            if(data == null){
+    
+                fs.unlink('./src/upload/' + photo, (error) => {
+                    if (error) {
+                        next(error);
+                    }
+                });
+                res.status(404).send({status:false,message:"Product not found."});
+    
+            }else{
+                
+                if(data.photo){
+                    fs.unlink('./src/upload/' + data.photo, (error) => {
+                        if (error) {
+                            next(error);
+                        }
+                    });
+                }
+
+                if(req.body.subCategoryId == undefined || req.body.subCategoryId == ''){
+
+                    res.json({status:true,message:'Product update successfully.'});
+                    
+                }else{
+                    const dc = await SubCategory.findByIdAndUpdate(req.body.subCategoryId,{$addToSet:{products:data._id}});
+                    res.json({status:true,message:'Product update successfully.'});
+
+                    if((req.body.subCategoryId != data.subCategory._id)){
+
+                        const dcc = await SubCategory.findByIdAndUpdate(data.subCategory._id,{$pull:{products:data._id}});
+
+                    }
+                }
+
+            }
+        }
     }catch(error){
         next(error);
     }
