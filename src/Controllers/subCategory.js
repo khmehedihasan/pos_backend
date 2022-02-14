@@ -60,7 +60,7 @@ exports.addSubCategory = async (req,res,next)=>{
 exports.allSubCategory = async (req,res,next)=>{
     try{
         
-        const data = await SubCategory.find().select({__v:0}).populate('category','name description img');
+        const data = await SubCategory.find().select({__v:0}).populate('category products','name description img salePrice purchasePrice');
         if(data.length<1){
             res.status(404).send({status:false,message:"Sub Category not found."});
         }else{
@@ -76,7 +76,7 @@ exports.allSubCategory = async (req,res,next)=>{
 
 exports.singleSubCategory = async (req,res,next)=>{
     try{
-        const data = await SubCategory.findById(req.params.id).select({__v:0}).populate('category','name description img');
+        const data = await SubCategory.findById(req.params.id).select({__v:0}).populate('category products','name description img salePrice purchasePrice');
 
         if(data == null){
             res.status(404).send({status:false,message:"Sub Category not found."});
