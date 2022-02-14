@@ -78,7 +78,13 @@ exports.allProduct = async (req,res,next)=>{
 
 exports.singleProduct = async (req,res,next)=>{
     try{
-        res.send("ok");
+        const data = await Product.findById(req.params.id).select({__v:0}).populate('category','name description img');
+
+        if(data == null){
+            res.status(404).send({status:false,message:"Sub Category not found."});
+        }else{
+            res.json({status:true,data});
+        }
     }catch(error){
         next(error);
     }
