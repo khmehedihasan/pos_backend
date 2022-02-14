@@ -192,7 +192,34 @@ exports.updateProduct = async (req,res,next)=>{
 
 exports.deleteProduct = async (req,res,next)=>{
     try{
-        res.send("ok");
+        const d = await Product.findById(req.params.id);
+
+        if(d == null){
+            res.status(404).send({status:false,message:"Product not found."});
+        }else{
+            const inStock = d.inStock;
+            if(inStock > 0){
+                res.status(400).send({status:false,message:`${inStock} product found in stock. So, can not delete this product. Please sale!`});
+            }else{
+
+                const data = await Product.findByIdAndDelete(req.params.id);
+                if(data == null){
+                    await res.status(400).send({status:false,message:"Faild to delete product."});
+                }
+                else{
+                    await SubCategory.findByIdAndUpdate(data.subCategory._id,{$pull:{products:data._id}});
+                    if(data.photo){
+                        fs.unlink('./src/upload/' + data.photo, (error) => {
+                            if (error) {
+                                next(error);
+                            }
+                        });
+                    }
+                    res.json({status:true,message:'Product delete successfully.'});
+                }
+
+            }
+        }
     }catch(error){
         next(error);
     }
