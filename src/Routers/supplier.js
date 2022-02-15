@@ -1,15 +1,18 @@
 const express = require('express');
 const router = express.Router();
-const supplier = require('../Controllers/supplier')
+const supplier = require('../Controllers/supplier');
+const validObjectId = require('../Middlewares/validObjectId');
+const p = require('../Middlewares/uploadPhoto');
+const uploadPhoto = require('../Middlewares/uploadPhoto');
 
 router.get('/',supplier.allSupplier);
 
-router.get('/:id',supplier.singleSupplier)
+router.get('/:id', validObjectId,supplier.singleSupplier)
 
-router.post('/',supplier.addSupplier);
+router.post('/', uploadPhoto.single('photo'), supplier.addSupplier);
 
-router.put('/',supplier.updateSupplier);
+router.put('/:id', validObjectId, uploadPhoto.single('photo'), supplier.updateSupplier);
 
-router.delete('/',supplier.deleteSupplier);
+router.delete('/:id', validObjectId, supplier.deleteSupplier);
 
 module.exports = router;
