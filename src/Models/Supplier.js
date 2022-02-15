@@ -24,6 +24,12 @@ const supplierSchema = mongoose.Schema({
     img:{
         type:String,
     },
+    purchases:[
+        {
+            type: mongoose.Types.ObjectId,
+            ref:"Purchase"
+        }
+    ],
     payable:{
         type:String,
         default:"0"
