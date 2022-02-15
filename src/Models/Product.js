@@ -34,6 +34,12 @@ const productSchema = mongoose.Schema({
         type:String,
         default:"0"
     },
+    purchases:[
+        {
+            type: mongoose.Types.ObjectId,
+            ref:"Purchase"
+        }
+    ],
     category:{
             type: mongoose.Types.ObjectId,
             ref:"Category"
