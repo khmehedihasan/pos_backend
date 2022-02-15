@@ -8,7 +8,7 @@ router.get('/', customer.allCustomer);
 
 router.get('/:id', validObjectId, customer.singleCustomer);
 
-router.post('/:id', validObjectId, uploadPhoto.single('photo'), customer.addCustomer)
+router.post('/', uploadPhoto.single('photo'), customer.addCustomer)
 
 router.put('/:id', validObjectId, uploadPhoto.single('photo'), customer.updateCustomer);
 
