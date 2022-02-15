@@ -18,6 +18,12 @@ const supplierSchema = mongoose.Schema({
         type:String,
         require:true
     },
+    photo:{
+        type:String,
+    },
+    img:{
+        type:String,
+    },
     payable:{
         type:String,
         default:"0"
