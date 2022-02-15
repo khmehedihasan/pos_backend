@@ -400,7 +400,34 @@ exports.updateCustomer = async (req,res,next)=>{
 
 exports.deleteCustomer = async (req,res,next)=>{
     try{
-        res.send("ok");
+        const d = await Customer.findById(req.params.id);
+
+        if(d == null){
+            res.status(404).send({status:false,message:"Customer not found."});
+        }else{
+            const due = d.due;
+            if(due > 0){
+                res.status(400).send({status:false,message:`${due} due found in customer account. So, can not delete this customer.Please take the due!`});
+            }else{
+
+                const data = await Customer.findByIdAndDelete(req.params.id);
+                if(data == null){
+                    await res.status(400).send({status:false,message:"Faild to delete customer."});
+                }
+                else{
+
+                    if(data.photo){
+                        fs.unlink('./src/upload/' + data.photo, (error) => {
+                            if (error) {
+                                next(error);
+                            }
+                        });
+                    }
+                    res.json({status:true,message:'Customer delete successfully.'});
+                }
+
+            }
+        }
     }catch(error){
         next(error);
     }
