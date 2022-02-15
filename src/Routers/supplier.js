@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const supplier = require('../Controllers/supplier');
 const validObjectId = require('../Middlewares/validObjectId');
-const p = require('../Middlewares/uploadPhoto');
 const uploadPhoto = require('../Middlewares/uploadPhoto');
 
 router.get('/',supplier.allSupplier);
