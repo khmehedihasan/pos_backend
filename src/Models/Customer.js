@@ -17,6 +17,12 @@ const customerSchema = mongoose.Schema({
         type:String,
         require:true
     },
+    photo:{
+        type:String,
+    },
+    img:{
+        type:String,
+    },
     receivable:{
         type:String,
         default:'0'
