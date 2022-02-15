@@ -1,6 +1,7 @@
 const Supplier = require('../Models/Supplier');
 const fs = require('fs');
 
+
 //-------------------------------------------------------------add supplier------------------------------------------------
 
 
@@ -376,43 +377,6 @@ exports.updateSupplier = async (req,res,next) =>{
             }
 
 
-
-
-            //-------------
-            // const photo = req.file.filename;
-            // const image = process.env.PUBLIC_LINK+req.file.filename;
-    
-            // const data = await Supplier.findByIdAndUpdate(req.params.id,{$set:{
-            //     name:req.body.name,
-            //     email:req.body.email,
-            //     phone:req.body.phone,
-            //     address:req.body.address,
-            //     img:image,
-            //     photo:photo,
-            // }});
-    
-            // if(data == null){
-    
-            //     fs.unlink('./src/upload/' + photo, (error) => {
-            //         if (error) {
-            //             next(error);
-            //         }
-            //     });
-            //     res.status(404).send({status:false,message:"Supplier not found."});
-    
-            // }else{
-                
-            //     if(data.photo){
-            //         fs.unlink('./src/upload/' + data.photo, (error) => {
-            //             if (error) {
-            //                 next(error);
-            //             }
-            //         });
-            //     }
-
-            //     res.json({status:true,message:'Supplier update successfully.'});
-
-            // }
         }
 
     }catch(error){
@@ -438,7 +402,7 @@ exports.updateSupplier = async (req,res,next) =>{
         else{
             next(error);
         }
-        // next(error)
+
     }
 }
 
@@ -448,7 +412,34 @@ exports.updateSupplier = async (req,res,next) =>{
 
 exports.deleteSupplier = async (req,res,next)=>{
     try{
-        res.send('ok');
+        const d = await Supplier.findById(req.params.id);
+
+        if(d == null){
+            res.status(404).send({status:false,message:"Supplier not found."});
+        }else{
+            const due = d.due;
+            if(due > 0){
+                res.status(400).send({status:false,message:`${due} due found in supplier account. So, can not delete this supplier. Please pay the due!`});
+            }else{
+
+                const data = await Supplier.findByIdAndDelete(req.params.id);
+                if(data == null){
+                    await res.status(400).send({status:false,message:"Faild to delete supplier."});
+                }
+                else{
+
+                    if(data.photo){
+                        fs.unlink('./src/upload/' + data.photo, (error) => {
+                            if (error) {
+                                next(error);
+                            }
+                        });
+                    }
+                    res.json({status:true,message:'Supplier delete successfully.'});
+                }
+
+            }
+        }
     }catch(error){
         next(error);
     }
