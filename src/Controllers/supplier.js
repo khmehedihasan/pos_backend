@@ -48,7 +48,7 @@ exports.addSupplier = async (req,res,next)=>{
         }
 
     }catch(error){
-        
+
         const photo = req.file.filename;
 
         fs.unlink('./src/upload/' + photo, (error) => {
@@ -95,7 +95,13 @@ exports.allSupplier = async (req,res,next)=>{
 
 exports.singleSupplier = async (req,res,next)=>{
     try{
-        res.send("ok");
+        const data = await Supplier.findById(req.params.id);
+
+        if(data == null){
+            res.status(404).send({status:false,message:"Supplier not found."});
+        }else{
+            res.json({status:true,data});
+        }
     }catch(error){
         next(error);
     }
