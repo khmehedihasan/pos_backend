@@ -78,7 +78,12 @@ exports.addCustomer = async (req,res,next)=>{
 
 exports.allCustomer = async (req,res,next)=>{
     try{
-        res.send("ok");
+        const data = await Customer.find().select({__v:0});
+        if(data.length<1){
+            res.status(404).send({status:false,message:"Customer not found."});
+        }else{
+            res.json({status:true,data});
+        }
     }catch(errro){
         next(error);
     }
