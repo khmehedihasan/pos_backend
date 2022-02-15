@@ -1,4 +1,5 @@
 const Supplier = require('../Models/Supplier');
+const fs = require('fs');
 
 //-------------------------------------------------------------add supplier------------------------------------------------
 
@@ -10,9 +11,9 @@ exports.addSupplier = async (req,res,next)=>{
 
             const data = await Supplier({
                 name:req.body.name,
-                email:req.body.description,
-                phone:req.body.description,
-                address:req.body.description
+                email:req.body.email,
+                phone:req.body.phone,
+                address:req.body.address
             });
         
 
@@ -30,9 +31,9 @@ exports.addSupplier = async (req,res,next)=>{
             const image = process.env.PUBLIC_LINK+req.file.filename;
             const data = await Supplier({
                 name:req.body.name,
-                email:req.body.description,
-                phone:req.body.description,
-                address:req.body.description,
+                email:req.body.email,
+                phone:req.body.phone,
+                address:req.body.address,
                 img:image,
                 photo:photo,
             });
@@ -47,7 +48,26 @@ exports.addSupplier = async (req,res,next)=>{
         }
 
     }catch(error){
-        next(error);
+        
+        const photo = req.file.filename;
+
+        fs.unlink('./src/upload/' + photo, (error) => {
+            if (error) {
+                next(error);
+            }
+        });
+
+        if(error.code){
+            if(error.keyPattern.phone){
+                res.status(400).send({status:false,message:"Phone number already present."});
+            }
+            else{
+                res.status(400).send({status:false,message:"Email already present."});
+            }
+        }
+        else{
+            next(error);
+        }
     }
 }
 
@@ -58,7 +78,12 @@ exports.addSupplier = async (req,res,next)=>{
 
 exports.allSupplier = async (req,res,next)=>{
     try{
-        res.send("ok");
+        const data = await Supplier.find().select({__v:0});
+        if(data.length<1){
+            res.status(404).send({status:false,message:"Supplier not found."});
+        }else{
+            res.json({status:true,data});
+        }
     }catch(error){
         next(error);
     }
