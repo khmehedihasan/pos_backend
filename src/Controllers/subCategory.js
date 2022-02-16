@@ -25,7 +25,7 @@ exports.addSubCategory = async (req,res,next)=>{
                 const dc = await Category.findByIdAndUpdate(req.body.categoryId,{$push:{subCategorys:d._id}});
                 res.send({status:true,message:"Sub Category added successfully."});
             }else{
-                res.send({status:true,message:"Faild to added Sub Category."});
+                res.send({status:true,message:"Failed to added Sub Category."});
             }
 
         }else{
