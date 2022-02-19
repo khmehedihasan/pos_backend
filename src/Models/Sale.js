@@ -9,6 +9,15 @@ const saleSchema = mongoose.Schema({
         type:mongoose.Types.ObjectId,
         ref:"Customer"
     },
+    customerName:{
+        type:String,
+    },
+    customerEmail:{
+        type:String,
+    },
+    customerPhone:{
+        type:String,
+    },
     receivable:{
         type:String,
         require:true
