@@ -82,7 +82,7 @@ exports.addSupplier = async (req,res,next)=>{
 
 exports.allSupplier = async (req,res,next)=>{
     try{
-        const data = await Supplier.find().select({__v:0});
+        const data = await Supplier.find().select({__v:0}).populate('purchases','product payable payed due quantity date');
         if(data.length<1){
             res.status(404).send({status:false,message:"Supplier not found."});
         }else{
