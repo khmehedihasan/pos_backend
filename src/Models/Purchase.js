@@ -9,6 +9,15 @@ const purchaseSchema = mongoose.Schema({
         type:mongoose.Types.ObjectId,
         ref:"Supplier"
     },
+    supplierName:{
+        type:String,
+    },
+    supplierEmail:{
+        type:String,
+    },
+    supplierPhone:{
+        type:String,
+    },
     payable:{
         type:String,
         require:true
