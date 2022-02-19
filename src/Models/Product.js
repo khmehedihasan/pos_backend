@@ -40,6 +40,12 @@ const productSchema = mongoose.Schema({
             ref:"Purchase"
         }
     ],
+    sales:[
+        {
+            type: mongoose.Types.ObjectId,
+            ref:"Sale"
+        }
+    ],
     category:{
             type: mongoose.Types.ObjectId,
             ref:"Category"
