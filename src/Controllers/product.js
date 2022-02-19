@@ -64,7 +64,7 @@ exports.addProduct = async (req,res,next)=>{
 
 exports.allProduct = async (req,res,next)=>{
     try{
-        const data = await Product.find().select({__v:0}).populate('subCategory','name description img');
+        const data = await Product.find().select({__v:0}).populate('subCategory purchases','name description img supplier payable payed due quantity date');
         if(data.length<1){
             res.status(404).send({status:false,message:"Product not found."});
         }else{
@@ -79,7 +79,7 @@ exports.allProduct = async (req,res,next)=>{
 
 exports.singleProduct = async (req,res,next)=>{
     try{
-        const data = await Product.findById(req.params.id).select({__v:0}).populate('subCategory','name description img');
+        const data = await Product.findById(req.params.id).select({__v:0}).populate('subCategory purchases','name description img supplier payable payed due quantity date');
 
         if(data == null){
             res.status(404).send({status:false,message:"Product not found."});
