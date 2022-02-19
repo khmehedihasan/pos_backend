@@ -8,6 +8,8 @@ const Supplier = require('../Models/Supplier');
 exports.addPurchase = async (req,res,next)=>{
     try{
 
+        const dtt = await Supplier.findById(req.body.supplierId);
+
         const data = await Purchase({
             product:req.body.productId,
             supplier:req.body.supplierId,
@@ -15,6 +17,10 @@ exports.addPurchase = async (req,res,next)=>{
             payed: req.body.payed,
             due: req.body.payable - req.body.payed,
             quantity:req.body.quantity,
+            supplierName:dtt.name,
+            supplierEmail:dtt.email,
+            supplierPhone:dtt.phone,
+
         });
     
 
@@ -32,7 +38,6 @@ exports.addPurchase = async (req,res,next)=>{
             }
             
 
-            const dtt = await Supplier.findById(req.body.supplierId);
             if(dtt != null){
 
                 const payable = (parseInt(req.body.payable) + parseInt(dtt.payable));
