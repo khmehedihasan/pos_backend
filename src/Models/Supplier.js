@@ -32,15 +32,15 @@ const supplierSchema = mongoose.Schema({
     ],
     payable:{
         type:Number,
-        default:"0"
+        default: 0
     },
     payed:{
         type:Number,
-        default:"0"
+        default: 0
     },
     due:{
         type:Number,
-        default:"0"
+        default: 0
     },
     date:{
         type:Date,

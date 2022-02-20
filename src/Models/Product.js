@@ -24,15 +24,15 @@ const productSchema = mongoose.Schema({
     },
     purchaseQuantity:{
         type:Number,
-        default:"0"
+        default: 0
     },
     saleQuantity:{
         type:Number,
-        default:"0"
+        default: 0
     },
     inStock:{
         type:Number,
-        default:"0"
+        default: 0
     },
     purchases:[
         {

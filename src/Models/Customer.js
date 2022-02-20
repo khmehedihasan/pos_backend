@@ -32,15 +32,15 @@ const customerSchema = mongoose.Schema({
     ],
     receivable:{
         type:Number,
-        default:'0'
+        default: 0
     },
     received:{
         type:Number,
-        default:'0'
+        default: 0
     },
     due:{
         type:Number,
-        default:'0'
+        default: 0
     },
     date:{
         type:Date,
