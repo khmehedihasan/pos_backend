@@ -15,23 +15,23 @@ const productSchema = mongoose.Schema({
         type:String,
     },
     purchasePrice:{
-        type:String,
+        type:Number,
         require:true
     },
     salePrice:{
-        type:String,
+        type:Number,
         require:true
     },
     purchaseQuantity:{
-        type:String,
+        type:Number,
         default:"0"
     },
     saleQuantity:{
-        type:String,
+        type:Number,
         default:"0"
     },
     inStock:{
-        type:String,
+        type:Number,
         default:"0"
     },
     purchases:[
