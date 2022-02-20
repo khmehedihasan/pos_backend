@@ -19,20 +19,20 @@ const saleSchema = mongoose.Schema({
         type:String,
     },
     receivable:{
-        type:String,
+        type:Number,
         require:true
     },
     received:{
-        type:String,
+        type:Number,
         require:true
     },
     due:{
-        type:String,
-        default:"0"
+        type:Number,
+        default: 0
     },
     quantity:{
-        type:String,
-        default:"1"
+        type:Number,
+        default: 1
     },
     date:{
         type:Date,
