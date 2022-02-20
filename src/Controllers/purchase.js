@@ -15,9 +15,9 @@ exports.addPurchase = async (req,res,next)=>{
         const data = await Purchase({
             product:req.body.productId,
             supplier:req.body.supplierId,
-            payable: parseInt(dt.salePrice) * parseInt(req.body.quantity),
+            payable: dt.salePrice * req.body.quantity,
             payed: req.body.payed,
-            due: (dt.salePrice * parseInt(req.body.quantity)) - req.body.payed,
+            due: (dt.salePrice * req.body.quantity) - req.body.payed,
             quantity:req.body.quantity,
             supplierName:dtt.name,
             supplierEmail:dtt.email,
@@ -32,8 +32,8 @@ exports.addPurchase = async (req,res,next)=>{
 
             if(dt != null){
 
-                const purchaseQuantity = (parseInt(req.body.quantity) + parseInt(dt.purchaseQuantity));
-                const inStock = (parseInt(req.body.quantity) + parseInt(dt.inStock));
+                const purchaseQuantity = req.body.quantity + dt.purchaseQuantity;
+                const inStock = req.body.quantity + dt.inStock;
 
                 const dc = await Product.findByIdAndUpdate(req.body.productId,{$set:{purchaseQuantity,inStock},$push:{purchases:d._id}});
             }
@@ -41,9 +41,9 @@ exports.addPurchase = async (req,res,next)=>{
 
             if(dtt != null){
 
-                const payable = (parseInt(d.payable) + parseInt(dtt.payable));
-                const payed = (parseInt(req.body.payed) + parseInt(dtt.payed));
-                const due = (parseInt(d.due) + parseInt(dtt.due));
+                const payable = d.payable + dtt.payable;
+                const payed = req.body.payed + dtt.payed;
+                const due = d.due + dtt.due;
 
                 const dc = await Supplier.findByIdAndUpdate(req.body.supplierId,{$set:{payable,payed,due},$push:{purchases:d._id}});
             }

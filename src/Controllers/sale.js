@@ -10,13 +10,15 @@ const Customer = require('../Models/Customer');
 exports.addSale = async (req,res,next)=>{
     try{
         const dtt = await Customer.findById(req.body.customerId);
+        const dt = await Product.findById(req.body.productId);
+
 
         const data = await Sale({
             product:req.body.productId,
             customer:req.body.customerId,
-            receivable: req.body.receivable,
+            receivable: dt.salePrice * req.body.quantity,
             received: req.body.received,
-            due: req.body.receivable - req.body.received,
+            due: (dt.salePrice * req.body.quantity) - req.body.received,
             quantity:req.body.quantity,
             customerName:dtt.name,
             customerEmail:dtt.email,
@@ -29,11 +31,10 @@ exports.addSale = async (req,res,next)=>{
 
         if(d != {}){
 
-            const dt = await Product.findById(req.body.productId);
             if(dt != null){
 
-                const saleQuantity = (parseInt(req.body.quantity) + parseInt(dt.saleQuantity));
-                const inStock = (parseInt(dt.inStock) - parseInt(req.body.quantity));
+                const saleQuantity = req.body.quantity + dt.saleQuantity;
+                const inStock = dt.inStock - req.body.quantity;
 
                 const dc = await Product.findByIdAndUpdate(req.body.productId,{$set:{saleQuantity,inStock},$push:{sales:d._id}});
             }
@@ -41,9 +42,9 @@ exports.addSale = async (req,res,next)=>{
 
             if(dtt != null){
 
-                const receivable = (parseInt(req.body.receivable) + parseInt(dtt.receivable));
-                const received = (parseInt(req.body.received) + parseInt(dtt.received));
-                const due = (parseInt(d.due) + parseInt(dtt.due));
+                const receivable = d.receivable + dtt.receivable;
+                const received = req.body.received + dtt.received;
+                const due = d.due + dtt.due;
 
                 const dc = await Customer.findByIdAndUpdate(req.body.customerId,{$set:{receivable,received,due},$push:{sales:d._id}});
             }
