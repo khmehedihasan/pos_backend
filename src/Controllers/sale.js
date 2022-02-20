@@ -62,8 +62,13 @@ exports.addSale = async (req,res,next)=>{
 
 exports.allSale = async (req,res,next)=>{
     try{
-        res.send("ok");
-    }catch(errro){
+        const data = await Sale.find().select({__v:0}).populate('product customer','name email phone due salePrice purchasePrice purchaseQuantity saleQuantity inStock');
+        if(data.length<1){
+            res.status(404).send({status:false,message:"No Product is sale yet!"});
+        }else{
+            res.json({status:true,data});
+        }
+    }catch(error){
         next(error);
     }
 }
