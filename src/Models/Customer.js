@@ -31,15 +31,15 @@ const customerSchema = mongoose.Schema({
         }
     ],
     receivable:{
-        type:String,
+        type:Number,
         default:'0'
     },
     received:{
-        type:String,
+        type:Number,
         default:'0'
     },
     due:{
-        type:String,
+        type:Number,
         default:'0'
     },
     date:{
