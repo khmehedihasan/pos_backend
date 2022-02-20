@@ -78,7 +78,7 @@ exports.addCustomer = async (req,res,next)=>{
 
 exports.allCustomer = async (req,res,next)=>{
     try{
-        const data = await Customer.find().select({__v:0});
+        const data = await Customer.find().select({__v:0}).populate('sales','product receivable received due quantity date');
         if(data.length<1){
             res.status(404).send({status:false,message:"Customer not found."});
         }else{
@@ -93,7 +93,7 @@ exports.allCustomer = async (req,res,next)=>{
 
 exports.singleCustomer = async (req,res,next)=>{
     try{
-        const data = await Customer.findById(req.params.id);
+        const data = await Customer.findById(req.params.id).populate('sales','product receivable received due quantity date');;
 
         if(data == null){
             res.status(404).send({status:false,message:"Customer not found."});

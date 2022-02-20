@@ -24,6 +24,12 @@ const customerSchema = mongoose.Schema({
     img:{
         type:String,
     },
+    sales:[
+        {
+            type: mongoose.Types.ObjectId,
+            ref:"Sale"
+        }
+    ],
     receivable:{
         type:String,
         default:'0'
