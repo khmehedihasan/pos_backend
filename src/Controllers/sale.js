@@ -77,7 +77,13 @@ exports.allSale = async (req,res,next)=>{
 
 exports.singleSale = async (req,res,next)=>{
     try{
-        res.send("ok");
+        const data = await Sale.findById(req.params.id).select({__v:0}).populate('product customer','name email phone due salePrice purchasePrice purchaseQuantity saleQuantity inStock');
+
+        if(data == null){
+            res.status(404).send({status:false,message:"No sale data found."});
+        }else{
+            res.json({status:true,data});
+        }
     }catch(error){
         next(error);
     }
