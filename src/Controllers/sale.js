@@ -121,7 +121,7 @@ exports.getDue = async (req,res,next)=>{
         if(prevData == null){
             res.status(404).send({status:false,message:"No sale data found."});
         }else{
-            // res.send(prevData)
+
             const data = await Sale.findByIdAndUpdate(req.params.id,{$set:{received: prevData.received + req.body.received, due: prevData.due - req.body.received}});
             if(data == null){
                 res.send({status:true,message:"Faild to get due."});
