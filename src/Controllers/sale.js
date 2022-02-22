@@ -124,10 +124,10 @@ exports.getDue = async (req,res,next)=>{
             // res.send(prevData)
             const data = await Sale.findByIdAndUpdate(req.params.id,{$set:{received: prevData.received + req.body.received, due: prevData.due - req.body.received}});
             if(data == null){
-                res.send({status:true,message:"Faild to pay due."});
+                res.send({status:true,message:"Faild to get due."});
             }else{
                 const dt = await Customer.findByIdAndUpdate(prevData.customer._id,{$set:{received: prevData.customer.received + req.body.received, due: prevData.customer.due - req.body.received}});
-                res.send({status:true,message:"Due payed successfully."});
+                res.send({status:true,message:"Get payed successfully."});
             }
         }
     }catch(error){
