@@ -2,6 +2,22 @@ const Sale = require('../../Models/Sale');
 
 
 
+
+//--------------------------------------get total sale----------------------------------
+
+exports.totalSale = async (req,res,next) =>{
+  try{
+      const data = await Sale.count({});
+
+      res.send([{total:data}]);
+
+  }catch(error){
+      next(error)
+  }
+}
+
+
+
 //--------------------------------------get total received money----------------------------------
 
 exports.totalReceived = async (req,res,next) =>{
