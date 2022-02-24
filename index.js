@@ -45,6 +45,8 @@ app.use('/purchase', require('./src/Routers/purchase'));
 
 app.use('/sale', require('./src/Routers/sale'));
 
+app.use('/report', require('./src/Routers/report'));
+
 
 
 

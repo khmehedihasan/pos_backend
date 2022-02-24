@@ -14,6 +14,6 @@ router.put('/:id', validObjectId, sale.updateSale);
 
 router.delete('/:id', validObjectId, sale.deleteSale);
 
-router.put('/due/:id', validObjectId, sale.getDue);
+router.patch('/:id', validObjectId, sale.getDue);
 
 module.exports = router;
