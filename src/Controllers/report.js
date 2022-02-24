@@ -24,6 +24,10 @@ exports.totalReceived = async (req,res,next) =>{
     }
 }
 
+
+
+//--------------------------------------get total sales due----------------------------------
+
 exports.totalDue = async (req,res,next) =>{
     try{
         const data = await Sale.aggregate([
