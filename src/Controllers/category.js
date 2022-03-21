@@ -18,7 +18,7 @@ exports.addCategory = async (req,res,next)=>{
             const d = await data.save();
     
             if(d != {}){
-                res.send({status:true,message:"Category added successfully."});
+                res.send({status:true,message:"Category added successfully.",data:d});
             }else{
                 res.send({status:true,message:"Faild to added Category."});
             }
@@ -36,7 +36,7 @@ exports.addCategory = async (req,res,next)=>{
             const d = await data.save();
     
             if(d != {}){
-                res.send({status:true,message:"Category added successfully."});
+                res.send({status:true,message:"Category added successfully.",data:d});
             }else{
                 res.send({status:true,message:"Faild to added Category."});
             }
@@ -94,7 +94,7 @@ exports.updateCategory = async (req,res,next)=>{
             const data = await Category.findByIdAndUpdate(req.params.id,{$set:{
                 name:req.body.name,
                 description:req.body.description
-            }});
+            }},{new:true});
 
             if(data == null){
     
@@ -102,7 +102,7 @@ exports.updateCategory = async (req,res,next)=>{
     
             }else{
     
-                res.json({status:true,message:'Category update successfully.'});
+                res.json({status:true,message:'Category update successfully.',data});
             }
 
         }else{
@@ -133,8 +133,9 @@ exports.updateCategory = async (req,res,next)=>{
                         }
                     });
                 }
+                const ndata = await Category.findById(req.params.id);
 
-                res.json({status:true,message:'Category update successfully.'});
+                res.json({status:true,message:'Category update successfully.',data:ndata});
             }
         }
 
