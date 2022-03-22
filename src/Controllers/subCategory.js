@@ -23,7 +23,7 @@ exports.addSubCategory = async (req,res,next)=>{
     
             if(d != {}){
                 const dc = await Category.findByIdAndUpdate(req.body.categoryId,{$push:{subCategorys:d._id}});
-                res.send({status:true,message:"Sub Category added successfully."});
+                res.send({status:true,message:"Sub Category added successfully.",data:d});
             }else{
                 res.send({status:true,message:"Failed to added Sub Category."});
             }
@@ -43,7 +43,7 @@ exports.addSubCategory = async (req,res,next)=>{
     
             if(d != {}){
                 const dc = await Category.findByIdAndUpdate(req.body.categoryId,{$push:{subCategorys:d._id}});
-                res.send({status:true,message:"Sub Category added successfully."});
+                res.send({status:true,message:"Sub Category added successfully.",data:d});
             }else{
                 res.send({status:true,message:"Faild to added Sub Category."});
             }
@@ -100,7 +100,7 @@ exports.updateSubCategory = async (req,res,next)=>{
                 name:req.body.name,
                 description:req.body.description,
                 category:req.body.categoryId
-            }}).populate('category','name');
+            }},{new:true}).populate('category','name');
 
 
             if(data == null){
@@ -111,11 +111,11 @@ exports.updateSubCategory = async (req,res,next)=>{
 
                 if(req.body.categoryId == undefined || req.body.categoryId == ''){
 
-                    res.json({status:true,message:'Sub Category update successfully.'});
+                    res.json({status:true,message:'Sub Category update successfully.',data});
                     
                 }else{
                     const dc = await Category.findByIdAndUpdate(req.body.categoryId,{$addToSet:{subCategorys:data._id}});
-                    res.json({status:true,message:'Sub Category update successfully.'});
+                    res.json({status:true,message:'Sub Category update successfully.',data});
 
                     if((req.body.categoryId != data.category._id)){
 
@@ -157,13 +157,16 @@ exports.updateSubCategory = async (req,res,next)=>{
                     });
                 }
 
+                const ndata = await SubCategory.findById(req.params.id);
+
                 if(req.body.categoryId == undefined || req.body.categoryId == ''){
 
-                    res.json({status:true,message:'Sub Category update successfully.'});
+                    res.json({status:true,message:'Sub Category update successfully.',data:ndata});
                     
                 }else{
                     const dc = await Category.findByIdAndUpdate(req.body.categoryId,{$addToSet:{subCategorys:data._id}});
-                    res.json({status:true,message:'Sub Category update successfully.'});
+
+                    res.json({status:true,message:'Sub Category update successfully.',data:ndata});
 
                     if((req.body.categoryId != data.category._id)){
 
