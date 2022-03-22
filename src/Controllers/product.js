@@ -24,7 +24,8 @@ exports.addProduct = async (req,res,next)=>{
     
             if(d != {}){
                 const dc = await SubCategory.findByIdAndUpdate(req.body.subCategoryId,{$push:{products:d._id}});
-                res.send({status:true,message:"Product added successfully."});
+                const dcc = await Product.findById(d._id).populate('subCategory','name description img');
+                res.send({status:true,message:"Product added successfully.",data:dcc});
             }else{
                 res.send({status:true,message:"Faild to added product."});
             }
@@ -47,7 +48,8 @@ exports.addProduct = async (req,res,next)=>{
     
             if(d != {}){
                 const dc = await SubCategory.findByIdAndUpdate(req.body.subCategoryId,{$push:{products:d._id}});
-                res.send({status:true,message:"Product added successfully."});
+                const dcc = await Product.findById(d._id).populate('subCategory','name description img');
+                res.send({status:true,message:"Product added successfully.",data:dcc});
             }else{
                 res.send({status:true,message:"Faild to added product."});
             }
@@ -70,7 +72,7 @@ exports.allProduct = async (req,res,next)=>{
         }else{
             res.json({status:true,data});
         }
-    }catch(errro){
+    }catch(error){
         next(error);
     }
 }
@@ -106,7 +108,7 @@ exports.updateProduct = async (req,res,next)=>{
                 purchasePrice:req.body.purchasePrice,
                 salePrice:req.body.salePrice,
                 subCategory: req.body.subCategoryId
-            }}).populate('subCategory','name');
+            }},{new:true}).populate('subCategory','name');
 
 
             if(data == null){
@@ -117,11 +119,11 @@ exports.updateProduct = async (req,res,next)=>{
 
                 if(req.body.subCategoryId == undefined || req.body.subCategoryId == ''){
 
-                    res.json({status:true,message:'Product update successfully.'});
+                    res.json({status:true,message:'Product update successfully.',data});
                     
                 }else{
                     const dc = await SubCategory.findByIdAndUpdate(req.body.subCategoryId,{$addToSet:{products:data._id}});
-                    res.json({status:true,message:'Product update successfully.'});
+                    res.json({status:true,message:'Product update successfully.',data});
 
                     if((req.body.subCategoryId != data.subCategory._id)){
 
@@ -145,7 +147,7 @@ exports.updateProduct = async (req,res,next)=>{
                 img:image, 
                 photo:photo
             }});
-    
+            
             if(data == null){
     
                 fs.unlink('./src/upload/' + photo, (error) => {
@@ -165,13 +167,15 @@ exports.updateProduct = async (req,res,next)=>{
                     });
                 }
 
+                const ndata = await Product.findById(req.params.id).populate('subCategory','name description img');;
+
                 if(req.body.subCategoryId == undefined || req.body.subCategoryId == ''){
 
-                    res.json({status:true,message:'Product update successfully.'});
+                    res.json({status:true,message:'Product update successfully.',data:ndata});
                     
                 }else{
                     const dc = await SubCategory.findByIdAndUpdate(req.body.subCategoryId,{$addToSet:{products:data._id}});
-                    res.json({status:true,message:'Product update successfully.'});
+                    res.json({status:true,message:'Product update successfully.',data:ndata});
 
                     if((req.body.subCategoryId != data.subCategory._id)){
 
