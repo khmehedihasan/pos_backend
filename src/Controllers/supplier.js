@@ -22,7 +22,7 @@ exports.addSupplier = async (req,res,next)=>{
             const d = await data.save();
     
             if(d != {}){
-                res.send({status:true,message:"Supplier added successfully."});
+                res.send({status:true,message:"Supplier added successfully.", data:d});
             }else{
                 res.send({status:true,message:"Faild to added Supplier."});
             }
@@ -42,7 +42,7 @@ exports.addSupplier = async (req,res,next)=>{
             const d = await data.save();
     
             if(d != {}){
-                res.send({status:true,message:"Supplier added successfully."});
+                res.send({status:true,message:"Supplier added successfully.",data:d});
             }else{
                 res.send({status:true,message:"Faild to added Supplier."});
             }
@@ -129,13 +129,13 @@ exports.updateSupplier = async (req,res,next) =>{
             }else{
 
                 if((d.email != req.body.email) && (d.phone != req.body.phone)){
-                    console.log('no email phone')
+                   
                     const data = await Supplier.findByIdAndUpdate(req.params.id,{$set:{
                         name:req.body.name,
                         email:req.body.email,
                         phone:req.body.phone,
                         address:req.body.address
-                    }});
+                    }},{new:true});
         
         
                     if(data == null){
@@ -144,7 +144,7 @@ exports.updateSupplier = async (req,res,next) =>{
             
                     }else{
         
-                        res.json({status:true,message:'Supplier update successfully.'});
+                        res.json({status:true,message:'Supplier update successfully.',data});
                     }
                 }
 
@@ -153,7 +153,7 @@ exports.updateSupplier = async (req,res,next) =>{
                     const data = await Supplier.findByIdAndUpdate(req.params.id,{$set:{
                         name:req.body.name,
                         address:req.body.address
-                    }});
+                    }},{new:true});
         
         
                     if(data == null){
@@ -162,7 +162,7 @@ exports.updateSupplier = async (req,res,next) =>{
             
                     }else{
         
-                        res.json({status:true,message:'Supplier update successfully.'});
+                        res.json({status:true,message:'Supplier update successfully.',data});
                     }
                 }else{
                     if(d.email == req.body.email){
@@ -172,7 +172,7 @@ exports.updateSupplier = async (req,res,next) =>{
                             name:req.body.name,
                             phone:req.body.phone,
                             address:req.body.address
-                        }});
+                        }},{new:true});
             
             
                         if(data == null){
@@ -181,7 +181,7 @@ exports.updateSupplier = async (req,res,next) =>{
                 
                         }else{
             
-                            res.json({status:true,message:'Supplier update successfully.'});
+                            res.json({status:true,message:'Supplier update successfully.',data});
                         }
         
                     }
@@ -192,7 +192,7 @@ exports.updateSupplier = async (req,res,next) =>{
                             name:req.body.name,
                             email:req.body.email,
                             address:req.body.address
-                        }});
+                        }},{new:true});
             
             
                         if(data == null){
@@ -201,7 +201,7 @@ exports.updateSupplier = async (req,res,next) =>{
                 
                         }else{
             
-                            res.json({status:true,message:'Supplier update successfully.'});
+                            res.json({status:true,message:'Supplier update successfully.',data});
                         }
                     }
                 }
@@ -256,7 +256,8 @@ exports.updateSupplier = async (req,res,next) =>{
                             });
                         }
         
-                        res.json({status:true,message:'Supplier update successfully.'});
+                        const ndata = await Supplier.findById(req.params.id);
+                        res.json({status:true,message:'Supplier update successfully.',data:ndata});
         
                     }
                 }
@@ -293,8 +294,10 @@ exports.updateSupplier = async (req,res,next) =>{
                                 }
                             });
                         }
+
+                        const ndata = await Supplier.findById(req.params.id);
         
-                        res.json({status:true,message:'Supplier update successfully.'});
+                        res.json({status:true,message:'Supplier update successfully.',data:ndata});
         
                     }
                 }
@@ -312,6 +315,7 @@ exports.updateSupplier = async (req,res,next) =>{
                         img:image,
                         photo:photo,
                     }});
+
             
                     if(data == null){
             
@@ -331,8 +335,10 @@ exports.updateSupplier = async (req,res,next) =>{
                                 }
                             });
                         }
+
+                        const ndata = await Supplier.findById(req.params.id);
         
-                        res.json({status:true,message:'Supplier update successfully.'});
+                        res.json({status:true,message:'Supplier update successfully.',data:ndata});
         
                     }
     
@@ -350,6 +356,7 @@ exports.updateSupplier = async (req,res,next) =>{
                         img:image,
                         photo:photo,
                     }});
+
             
                     if(data == null){
             
@@ -369,8 +376,9 @@ exports.updateSupplier = async (req,res,next) =>{
                                 }
                             });
                         }
+                        const ndata = await Supplier.findById(req.params.id);
         
-                        res.json({status:true,message:'Supplier update successfully.'});
+                        res.json({status:true,message:'Supplier update successfully.',data:ndata});
         
                     }
                 }
@@ -392,6 +400,7 @@ exports.updateSupplier = async (req,res,next) =>{
     
         }
         if(error.code){
+
             if(error.keyPattern.phone){
                 res.status(400).send({status:false,message:"Phone number already present."});
             }
