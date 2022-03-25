@@ -21,7 +21,7 @@ exports.addCustomer = async (req,res,next)=>{
             const d = await data.save();
     
             if(d != {}){
-                res.send({status:true,message:"Customer added successfully."});
+                res.send({status:true,message:"Customer added successfully.",data:d});
             }else{
                 res.send({status:true,message:"Faild to added customer."});
             }
@@ -41,7 +41,7 @@ exports.addCustomer = async (req,res,next)=>{
             const d = await data.save();
     
             if(d != {}){
-                res.send({status:true,message:"Customer added successfully."});
+                res.send({status:true,message:"Customer added successfully.",data:d});
             }else{
                 res.send({status:true,message:"Faild to added customer."});
             }
@@ -127,7 +127,7 @@ exports.updateCustomer = async (req,res,next)=>{
                         email:req.body.email,
                         phone:req.body.phone,
                         address:req.body.address
-                    }});
+                    }},{new:true});
         
         
                     if(data == null){
@@ -136,7 +136,7 @@ exports.updateCustomer = async (req,res,next)=>{
             
                     }else{
         
-                        res.json({status:true,message:'Customer update successfully.'});
+                        res.json({status:true,message:'Customer update successfully.',data});
                     }
                 }
 
@@ -145,7 +145,7 @@ exports.updateCustomer = async (req,res,next)=>{
                     const data = await Customer.findByIdAndUpdate(req.params.id,{$set:{
                         name:req.body.name,
                         address:req.body.address
-                    }});
+                    }},{new:true});
         
         
                     if(data == null){
@@ -154,7 +154,7 @@ exports.updateCustomer = async (req,res,next)=>{
             
                     }else{
         
-                        res.json({status:true,message:'Customer update successfully.'});
+                        res.json({status:true,message:'Customer update successfully.',data});
                     }
                 }else{
                     if(d.email == req.body.email){
@@ -164,7 +164,7 @@ exports.updateCustomer = async (req,res,next)=>{
                             name:req.body.name,
                             phone:req.body.phone,
                             address:req.body.address
-                        }});
+                        }},{new:true});
             
             
                         if(data == null){
@@ -173,7 +173,7 @@ exports.updateCustomer = async (req,res,next)=>{
                 
                         }else{
             
-                            res.json({status:true,message:'Customer update successfully.'});
+                            res.json({status:true,message:'Customer update successfully.',data});
                         }
         
                     }
@@ -184,7 +184,7 @@ exports.updateCustomer = async (req,res,next)=>{
                             name:req.body.name,
                             email:req.body.email,
                             address:req.body.address
-                        }});
+                        }},{new:true});
             
             
                         if(data == null){
@@ -193,7 +193,7 @@ exports.updateCustomer = async (req,res,next)=>{
                 
                         }else{
             
-                            res.json({status:true,message:'Customer update successfully.'});
+                            res.json({status:true,message:'Customer update successfully.',data});
                         }
                     }
                 }
@@ -221,11 +221,16 @@ exports.updateCustomer = async (req,res,next)=>{
 
                 if((d.email != req.body.email) && (d.phone != req.body.phone)){
 
+                    const photo = req.file.filename;
+                    const image = process.env.PUBLIC_LINK+req.file.filename;
+
                     const data = await Customer.findByIdAndUpdate(req.params.id,{$set:{
                         name:req.body.name,
                         email:req.body.email,
                         phone:req.body.phone,
-                        address:req.body.address
+                        address:req.body.address,
+                        img:image,
+                        photo:photo
                     }});
         
         
@@ -247,8 +252,9 @@ exports.updateCustomer = async (req,res,next)=>{
                                 }
                             });
                         }
-        
-                        res.json({status:true,message:'Customer update successfully.'});
+
+                        const ndata = await Customer.findById(req.params.id);
+                        res.json({status:true,message:'Customer update successfully.',data:ndata});
         
                     }
                 }
@@ -285,8 +291,8 @@ exports.updateCustomer = async (req,res,next)=>{
                                 }
                             });
                         }
-        
-                        res.json({status:true,message:'Customer update successfully.'});
+                        const ndata = await Customer.findById(req.params.id);
+                        res.json({status:true,message:'Customer update successfully.',data:ndata});
         
                     }
                 }
@@ -323,8 +329,8 @@ exports.updateCustomer = async (req,res,next)=>{
                                 }
                             });
                         }
-        
-                        res.json({status:true,message:'Customer update successfully.'});
+                        const ndata = await Customer.findById(req.params.id);
+                        res.json({status:true,message:'Customer update successfully.',data:ndata});
         
                     }
     
@@ -361,8 +367,9 @@ exports.updateCustomer = async (req,res,next)=>{
                                 }
                             });
                         }
-        
-                        res.json({status:true,message:'Customer update successfully.'});
+
+                        const ndata = await Customer.findById(req.params.id);
+                        res.json({status:true,message:'Customer update successfully.',data:ndata});
         
                     }
                 }
@@ -381,6 +388,7 @@ exports.updateCustomer = async (req,res,next)=>{
             });
     
         }
+        console.log(error)
         if(error.code){
             if(error.keyPattern.phone){
                 res.status(400).send({status:false,message:"Phone number already present."});
