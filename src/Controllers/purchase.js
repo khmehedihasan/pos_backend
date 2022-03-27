@@ -15,10 +15,10 @@ exports.addPurchase = async (req,res,next)=>{
         const data = await Purchase({
             product:req.body.productId,
             supplier:req.body.supplierId,
-            payable: dt.salePrice * req.body.quantity,
-            payed: req.body.payed,
-            due: (dt.salePrice * req.body.quantity) - req.body.payed,
-            quantity:req.body.quantity,
+            payable: dt.salePrice * parseFloat(req.body.quantity),
+            payed: parseInt(req.body.payed),
+            due: (dt.salePrice * parseFloat(req.body.quantity)) - parseInt(req.body.payed),
+            quantity:parseFloat(req.body.quantity),
             supplierName:dtt.name,
             supplierEmail:dtt.email,
             supplierPhone:dtt.phone,
@@ -32,8 +32,8 @@ exports.addPurchase = async (req,res,next)=>{
 
             if(dt != null){
 
-                const purchaseQuantity = req.body.quantity + dt.purchaseQuantity;
-                const inStock = req.body.quantity + dt.inStock;
+                const purchaseQuantity = parseFloat(req.body.quantity) + dt.purchaseQuantity;
+                const inStock = parseFloat(req.body.quantity) + dt.inStock;
 
                 const dc = await Product.findByIdAndUpdate(req.body.productId,{$set:{purchaseQuantity,inStock},$push:{purchases:d._id}});
             }
@@ -42,13 +42,13 @@ exports.addPurchase = async (req,res,next)=>{
             if(dtt != null){
 
                 const payable = d.payable + dtt.payable;
-                const payed = req.body.payed + dtt.payed;
+                const payed = parseInt(req.body.payed) + dtt.payed;
                 const due = d.due + dtt.due;
 
                 const dc = await Supplier.findByIdAndUpdate(req.body.supplierId,{$set:{payable,payed,due},$push:{purchases:d._id}});
             }
 
-            res.send({status:true,message:"Product purchase successfully."});
+            res.send({status:true,message:"Product purchase successfully.",data:d});
         }else{
             res.send({status:true,message:"Product failed to purchase."});
         }
@@ -123,11 +123,11 @@ exports.payDue = async (req,res,next)=>{
             res.status(404).send({status:false,message:"No purchase data found."});
         }else{
 
-            const data = await Purchase.findByIdAndUpdate(req.params.id,{$set:{payed: prevData.payed + req.body.payed, due: prevData.due - req.body.payed}});
+            const data = await Purchase.findByIdAndUpdate(req.params.id,{$set:{payed: prevData.payed + parseInt(req.body.payed), due: prevData.due - parseInt(req.body.payed)}});
             if(data == null){
                 res.send({status:true,message:"Faild to pay due."});
             }else{
-                const dt = await Supplier.findByIdAndUpdate(prevData.supplier._id,{$set:{payed: prevData.supplier.payed + req.body.payed, due: prevData.supplier.due - req.body.payed}});
+                const dt = await Supplier.findByIdAndUpdate(prevData.supplier._id,{$set:{payed: prevData.supplier.payed + parseInt(req.body.payed), due: prevData.supplier.due - parseInt(req.body.payed)}});
                 res.send({status:true,message:"Due payed successfully."});
             }
         }
