@@ -48,7 +48,9 @@ exports.addPurchase = async (req,res,next)=>{
                 const dc = await Supplier.findByIdAndUpdate(req.body.supplierId,{$set:{payable,payed,due},$push:{purchases:d._id}});
             }
 
-            res.send({status:true,message:"Product purchase successfully.",data:d});
+            const dcc = await Purchase.findById(d._id).populate('product supplier','name email phone payable payed due salePrice purchasePrice purchaseQuantity saleQuantity inStock');;
+
+            res.send({status:true,message:"Product purchase successfully.",data:dcc});
         }else{
             res.send({status:true,message:"Product failed to purchase."});
         }
