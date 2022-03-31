@@ -16,10 +16,10 @@ exports.addSale = async (req,res,next)=>{
         const data = await Sale({
             product:req.body.productId,
             customer:req.body.customerId,
-            receivable: dt.salePrice * req.body.quantity,
-            received: req.body.received,
-            due: (dt.salePrice * req.body.quantity) - req.body.received,
-            quantity:req.body.quantity,
+            receivable: dt.salePrice * parseInt(req.body.quantity),
+            received: parseInt(req.body.received),
+            due: (dt.salePrice * parseInt(req.body.quantity)) - parseInt(req.body.received),
+            quantity:parseInt(req.body.quantity),
             customerName:dtt.name,
             customerEmail:dtt.email,
             customerPhone:dtt.phone,
@@ -33,8 +33,8 @@ exports.addSale = async (req,res,next)=>{
 
             if(dt != null){
 
-                const saleQuantity = req.body.quantity + dt.saleQuantity;
-                const inStock = dt.inStock - req.body.quantity;
+                const saleQuantity = parseInt(req.body.quantity) + dt.saleQuantity;
+                const inStock = dt.inStock - parseInt(req.body.quantity);
 
                 const dc = await Product.findByIdAndUpdate(req.body.productId,{$set:{saleQuantity,inStock},$push:{sales:d._id}});
             }
@@ -43,13 +43,13 @@ exports.addSale = async (req,res,next)=>{
             if(dtt != null){
 
                 const receivable = d.receivable + dtt.receivable;
-                const received = req.body.received + dtt.received;
+                const received = parseInt(req.body.received) + dtt.received;
                 const due = d.due + dtt.due;
 
                 const dc = await Customer.findByIdAndUpdate(req.body.customerId,{$set:{receivable,received,due},$push:{sales:d._id}});
             }
-
-            res.send({status:true,message:"Product sale successfully."});
+            const dcc = await Sale.findById(d._id).populate('product customer','name email phone address due salePrice purchasePrice purchaseQuantity saleQuantity inStock');
+            res.send({status:true,message:"Product sale successfully.",data:dcc});
         }else{
             res.send({status:true,message:"Product failed to sale."});
         }
@@ -63,7 +63,7 @@ exports.addSale = async (req,res,next)=>{
 
 exports.allSale = async (req,res,next)=>{
     try{
-        const data = await Sale.find().select({__v:0}).populate('product customer','name email phone due salePrice purchasePrice purchaseQuantity saleQuantity inStock');
+        const data = await Sale.find().select({__v:0}).populate('product customer','name email phone address due salePrice purchasePrice purchaseQuantity saleQuantity inStock');
         if(data.length<1){
             res.status(404).send({status:false,message:"No Product is sale yet!"});
         }else{
@@ -78,7 +78,7 @@ exports.allSale = async (req,res,next)=>{
 
 exports.singleSale = async (req,res,next)=>{
     try{
-        const data = await Sale.findById(req.params.id).select({__v:0}).populate('product customer','name email phone due salePrice purchasePrice purchaseQuantity saleQuantity inStock');
+        const data = await Sale.findById(req.params.id).select({__v:0}).populate('product customer','name email phone address due salePrice purchasePrice purchaseQuantity saleQuantity inStock');
 
         if(data == null){
             res.status(404).send({status:false,message:"No sale data found."});
@@ -122,11 +122,11 @@ exports.getDue = async (req,res,next)=>{
             res.status(404).send({status:false,message:"No sale data found."});
         }else{
 
-            const data = await Sale.findByIdAndUpdate(req.params.id,{$set:{received: prevData.received + req.body.received, due: prevData.due - req.body.received}});
+            const data = await Sale.findByIdAndUpdate(req.params.id,{$set:{received: prevData.received + parseInt(req.body.received), due: prevData.due - parseInt(req.body.received)}});
             if(data == null){
                 res.send({status:true,message:"Faild to get due."});
             }else{
-                const dt = await Customer.findByIdAndUpdate(prevData.customer._id,{$set:{received: prevData.customer.received + req.body.received, due: prevData.customer.due - req.body.received}});
+                const dt = await Customer.findByIdAndUpdate(prevData.customer._id,{$set:{received: prevData.customer.received + parseInt(req.body.received), due: prevData.customer.due - parseInt(req.body.received)}});
                 res.send({status:true,message:"Get payed successfully."});
             }
         }
