@@ -111,26 +111,3 @@ exports.deleteSale = async (req,res,next)=>{
         next(error);
     }
 }
-
-//--------------------------------------------------------------------get due---------------------------------------------------
-
-exports.getDue = async (req,res,next)=>{
-    try{
-        const prevData = await Sale.findById(req.params.id).populate('product customer','name email phone receivable received due');
-
-        if(prevData == null){
-            res.status(404).send({status:false,message:"No sale data found."});
-        }else{
-
-            const data = await Sale.findByIdAndUpdate(req.params.id,{$set:{received: prevData.received + parseInt(req.body.received), due: prevData.due - parseInt(req.body.received)}});
-            if(data == null){
-                res.send({status:true,message:"Faild to get due."});
-            }else{
-                const dt = await Customer.findByIdAndUpdate(prevData.customer._id,{$set:{received: prevData.customer.received + parseInt(req.body.received), due: prevData.customer.due - parseInt(req.body.received)}});
-                res.send({status:true,message:"Get payed successfully."});
-            }
-        }
-    }catch(error){
-        next(error);
-    }
-}
