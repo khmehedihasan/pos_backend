@@ -1,6 +1,7 @@
 const Purchase = require('../Models/Purchase');
 const Product = require('../Models/Product');
 const Supplier = require('../Models/Supplier');
+const SupplierDue = require('../Models/SupplierDue');
 
 
 //-------------------------------------------------------add Purchase------------------------------------------------
@@ -116,25 +117,3 @@ exports.deletePurchase = async (req,res,next)=>{
 }
 
 
-//---------------------------------------------------------------------pay due-----------------------------------------------
-
-exports.payDue = async (req,res,next)=>{
-    try{
-        const prevData = await Purchase.findById(req.params.id).populate('product supplier','name email phone address payable payed due salePrice purchasePrice purchaseQuantity saleQuantity inStock');
-        if(prevData == null){
-            res.status(404).send({status:false,message:"No purchase data found."});
-        }else{
-
-            const data = await Purchase.findByIdAndUpdate(req.params.id,{$set:{payed: prevData.payed + parseInt(req.body.payed), due: prevData.due - parseInt(req.body.payed)}});
-            if(data == null){
-                res.send({status:true,message:"Faild to pay due."});
-            }else{
-                const dt = await Supplier.findByIdAndUpdate(prevData.supplier._id,{$set:{payed: prevData.supplier.payed + parseInt(req.body.payed), due: prevData.supplier.due - parseInt(req.body.payed)}});
-                res.send({status:true,message:"Due payed successfully."});
-            }
-        }
-
-    }catch(error){
-        next(error);
-    }
-}

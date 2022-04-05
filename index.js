@@ -45,6 +45,10 @@ app.use('/purchase', require('./src/Routers/purchase'));
 
 app.use('/sale', require('./src/Routers/sale'));
 
+app.use('/due/supplier', require('./src/Routers/supplierDue'));
+
+app.use('/due/customer', require('./src/Routers/CustomerDue'));
+
 app.use('/report', require('./src/Routers/report'));
 
 
