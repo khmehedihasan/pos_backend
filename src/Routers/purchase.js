@@ -13,6 +13,6 @@ router.put('/:id', validObjectId, purchase.updatePurchase);
 
 router.delete('/:id', validObjectId, purchase.deletePurchase);
 
-router.patch('/:id', validObjectId, purchase.payDue);
+// router.patch('/:id', validObjectId, purchase.payDue);
 
 module.exports = router;
