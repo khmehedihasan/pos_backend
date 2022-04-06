@@ -49,6 +49,13 @@ app.use('/due/supplier', require('./src/Routers/supplierDue'));
 
 app.use('/due/customer', require('./src/Routers/CustomerDue'));
 
+app.use('/return/supplier', require('./src/Routers/SupplierReturn'));
+
+app.use('/return/customer', require('./src/Routers/customerReturn'));
+
+
+// app.use('/due/customer', require('./src/Routers/CustomerDue'));
+
 app.use('/report', require('./src/Routers/report'));
 
 
