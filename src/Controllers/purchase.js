@@ -1,7 +1,6 @@
 const Purchase = require('../Models/Purchase');
 const Product = require('../Models/Product');
 const Supplier = require('../Models/Supplier');
-const SupplierDue = require('../Models/SupplierDue');
 
 
 //-------------------------------------------------------add Purchase------------------------------------------------
