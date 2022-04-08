@@ -48,7 +48,7 @@ exports.addPurchase = async (req,res,next)=>{
                 const dc = await Supplier.findByIdAndUpdate(req.body.supplierId,{$set:{payable,payed,due},$push:{purchases:d._id}});
             }
 
-            const dcc = await Purchase.findById(d._id).populate('product supplier','name email phone address payable payed due salePrice purchasePrice purchaseQuantity saleQuantity inStock');;
+            const dcc = await Purchase.findById(d._id).populate('product supplier','name email phone address payable payed due img salePrice purchasePrice purchaseQuantity saleQuantity inStock');;
 
             res.send({status:true,message:"Product purchase successfully.",data:dcc});
         }else{
@@ -65,7 +65,7 @@ exports.addPurchase = async (req,res,next)=>{
 
 exports.allPurchase = async (req,res,next)=>{
     try{
-        const data = await Purchase.find().select({__v:0}).populate('product supplier','name email phone address payable payed due salePrice purchasePrice purchaseQuantity saleQuantity inStock');
+        const data = await Purchase.find().select({__v:0}).populate('product supplier','name email phone address payable payed due img salePrice purchasePrice purchaseQuantity saleQuantity inStock');
         if(data.length<1){
             res.status(404).send({status:false,message:"No Product is purchase yet!"});
         }else{
@@ -81,7 +81,7 @@ exports.allPurchase = async (req,res,next)=>{
 
 exports.singlePurchase = async (req,res,next)=>{
     try{
-        const data = await Purchase.findById(req.params.id).select({__v:0}).populate('product supplier','name email phone address payable payed due salePrice purchasePrice purchaseQuantity saleQuantity inStock');
+        const data = await Purchase.findById(req.params.id).select({__v:0}).populate('product supplier','name email phone address payable payed due img salePrice purchasePrice purchaseQuantity saleQuantity inStock');
 
         if(data == null){
             res.status(404).send({status:false,message:"No purchase data found."});
