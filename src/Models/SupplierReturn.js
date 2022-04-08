@@ -17,6 +17,10 @@ const returnSchema = mongoose.Schema({
     purchase:{
         type:mongoose.Types.ObjectId,
         ref: "Purchase"
+    },
+    date:{
+        type:Date,
+        default:Date.now()
     }
 });
 
