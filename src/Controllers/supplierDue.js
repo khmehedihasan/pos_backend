@@ -9,7 +9,7 @@ const Supplier = require('../Models/Supplier');
 
 exports.allDues = async (req, res, next)=>{
     try{
-        const data = await SupplierDue.find().select({__v:0}).populate('purchase','payable payed due ');
+        const data = await SupplierDue.find().select({__v:0}).populate('product supplier purchase','name email phone address payable payed due salePrice purchasePrice purchaseQuantity saleQuantity inStock');
         if(data.length<1){
             res.status(404).send({status:false,message:"No due is payed yet!"});
         }else{
