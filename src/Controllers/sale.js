@@ -48,7 +48,7 @@ exports.addSale = async (req,res,next)=>{
 
                 const dc = await Customer.findByIdAndUpdate(req.body.customerId,{$set:{receivable,received,due},$push:{sales:d._id}});
             }
-            const dcc = await Sale.findById(d._id).populate('product customer','name email phone address due salePrice purchasePrice purchaseQuantity saleQuantity inStock');
+            const dcc = await Sale.findById(d._id).populate('product customer','name email phone address due img salePrice purchasePrice purchaseQuantity saleQuantity inStock');
             res.send({status:true,message:"Product sale successfully.",data:dcc});
         }else{
             res.send({status:true,message:"Product failed to sale."});
@@ -63,7 +63,7 @@ exports.addSale = async (req,res,next)=>{
 
 exports.allSale = async (req,res,next)=>{
     try{
-        const data = await Sale.find().select({__v:0}).populate('product customer','name email phone address due salePrice purchasePrice purchaseQuantity saleQuantity inStock');
+        const data = await Sale.find().select({__v:0}).populate('product customer','name email phone address due img salePrice purchasePrice purchaseQuantity saleQuantity inStock');
         if(data.length<1){
             res.status(404).send({status:false,message:"No Product is sale yet!"});
         }else{
@@ -78,7 +78,7 @@ exports.allSale = async (req,res,next)=>{
 
 exports.singleSale = async (req,res,next)=>{
     try{
-        const data = await Sale.findById(req.params.id).select({__v:0}).populate('product customer','name email phone address due salePrice purchasePrice purchaseQuantity saleQuantity inStock');
+        const data = await Sale.findById(req.params.id).select({__v:0}).populate('product customer','name email phone address due img salePrice purchasePrice purchaseQuantity saleQuantity inStock');
 
         if(data == null){
             res.status(404).send({status:false,message:"No sale data found."});
