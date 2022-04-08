@@ -17,6 +17,10 @@ const returnSchema = mongoose.Schema({
     sale:{
         type:mongoose.Types.ObjectId,
         ref: "Sale"
+    },
+    date:{
+        type:Date,
+        default:Date.now()
     }
 });
 
