@@ -11,7 +11,7 @@ router.get('/sale/totalPorduct',Salereport.totalPorduct);
 
 router.get('/purchase/totalSale',purchaseReport.totalPurchase);
 router.get('/purchase/totalReceived',purchaseReport.totalPayed);
-router.get('/purchase/totalDue',purchaseReport.totalPayed);
+router.get('/purchase/totalDue',purchaseReport.totalDue);
 router.get('/purchase/totalPorduct',purchaseReport.totalPorduct);
 
 module.exports = router;

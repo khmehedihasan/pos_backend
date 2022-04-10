@@ -49,7 +49,6 @@ exports.getAlluser = async (req,res,next) =>{
 
         const data = await User.find().select({__v:0,password:0,token:0});
 
-        // console.log(data)
 
         if(data.length > 0){
 
@@ -82,7 +81,14 @@ exports.loginUser = async (req,res,next)=>{
 
             const isUser = await bcrypt.compare(req.body.password, user[0].password);
             if(isUser){
-                res.json({status:true,message:'Login successfully',login:true});
+
+                const token = await jwt.sign({_id:user[0].id},process.env.JWT_SEC,{expiresIn:process.env.JWT_EXP});
+                const data = await User.findByIdAndUpdate(user[0]._id,{token:token},{new:true});
+
+                res.cookie('token',data.token,{expires: new Date(Date.now() + parseInt(process.env.COOKIEEXP)),httpOnly:true, secure:true, signed:true, secret:process.env.COOKIESEC,sameSite:"none" });
+
+                res.json({status:true,message:'Login successfully.',login:true});
+
             }else{
                 res.status(401).send({status:false,message:'Authentication failed.',login:false})
             }
