@@ -1,12 +1,13 @@
 const express = require('express');
 const customerReturn = require('../Controllers/customerReturn');
 const validObjectId = require('../Middlewares/validObjectId');
+const cheackToken = require('../Middlewares/cheackToken');
 const router = express.Router();
 
-router.get('/', customerReturn.allReturn);
+router.get('/', cheackToken, customerReturn.allReturn);
 
-router.get('/:id', validObjectId, customerReturn.singleReturn);
+router.get('/:id', cheackToken, validObjectId, customerReturn.singleReturn);
 
-router.post('/:id', validObjectId, customerReturn.returnProduct);
+router.post('/:id', cheackToken, validObjectId, customerReturn.returnProduct);
 
 module.exports = router;

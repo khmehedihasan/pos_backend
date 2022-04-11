@@ -2,17 +2,17 @@ const express = require('express');
 const router = express.Router();
 const purchase = require('../Controllers/purchase');
 const validObjectId = require('../Middlewares/validObjectId');
+const cheackToken = require('../Middlewares/cheackToken');
 
-router.get('/', purchase.allPurchase);
+router.get('/', cheackToken,  purchase.allPurchase);
 
-router.get('/:id', validObjectId, purchase.singlePurchase);
+router.get('/:id', cheackToken,  validObjectId, purchase.singlePurchase);
 
-router.post('/', purchase.addPurchase)
+router.post('/', cheackToken,  purchase.addPurchase)
 
-router.put('/:id', validObjectId, purchase.updatePurchase);
+router.put('/:id', cheackToken,  validObjectId, purchase.updatePurchase);
 
-router.delete('/:id', validObjectId, purchase.deletePurchase);
+router.delete('/:id', cheackToken,  validObjectId, purchase.deletePurchase);
 
-// router.patch('/:id', validObjectId, purchase.payDue);
 
 module.exports = router;

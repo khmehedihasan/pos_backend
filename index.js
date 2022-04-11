@@ -2,7 +2,6 @@ require('dotenv').config();
 require('./src/DB/connect');
 const cookieParser = require('cookie-parser');
 const express = require('express');
-const cheackToken = require('./src/Middlewares/cheackToken');
 const app = express();
 
 
@@ -35,29 +34,29 @@ app.get('/', async (req,res,next)=>{
 
 app.use('/user',require('./src/Routers/user'));
 
-app.use('/supplier', cheackToken, require('./src/Routers/supplier'));
+app.use('/supplier', require('./src/Routers/supplier'));
 
-app.use('/customer', cheackToken, require('./src/Routers/customer'));
+app.use('/customer', require('./src/Routers/customer'));
 
-app.use('/category', cheackToken, require('./src/Routers/category'));
+app.use('/category', require('./src/Routers/category'));
 
-app.use('/subCategory', cheackToken, require('./src/Routers/subCategory'));
+app.use('/subCategory', require('./src/Routers/subCategory'));
 
-app.use('/product', cheackToken, require('./src/Routers/product'));
+app.use('/product', require('./src/Routers/product'));
 
-app.use('/purchase', cheackToken, require('./src/Routers/purchase'));
+app.use('/purchase', require('./src/Routers/purchase'));
 
-app.use('/sale', cheackToken, require('./src/Routers/sale'));
+app.use('/sale', require('./src/Routers/sale'));
 
-app.use('/due/supplier', cheackToken, require('./src/Routers/supplierDue'));
+app.use('/due/supplier', require('./src/Routers/supplierDue'));
 
-app.use('/due/customer', cheackToken, require('./src/Routers/CustomerDue'));
+app.use('/due/customer', require('./src/Routers/CustomerDue'));
 
-app.use('/return/supplier', cheackToken, require('./src/Routers/SupplierReturn'));
+app.use('/return/supplier', require('./src/Routers/SupplierReturn'));
 
-app.use('/return/customer', cheackToken, require('./src/Routers/customerReturn'));
+app.use('/return/customer', require('./src/Routers/customerReturn'));
 
-app.use('/report', cheackToken, require('./src/Routers/report'));
+app.use('/report', require('./src/Routers/report'));
 
 
 

@@ -3,15 +3,16 @@ const router = express.Router();
 const customer = require('../Controllers/customer');
 const validObjectId = require('../Middlewares/validObjectId');
 const uploadPhoto = require('../Middlewares/uploadPhoto');
+const cheackToken = require('../Middlewares/cheackToken');
 
-router.get('/', customer.allCustomer);
+router.get('/', cheackToken, customer.allCustomer);
 
-router.get('/:id', validObjectId, customer.singleCustomer);
+router.get('/:id', cheackToken, validObjectId, customer.singleCustomer);
 
-router.post('/', uploadPhoto.single('photo'), customer.addCustomer)
+router.post('/', cheackToken, uploadPhoto.single('photo'), customer.addCustomer)
 
-router.put('/:id', validObjectId, uploadPhoto.single('photo'), customer.updateCustomer);
+router.put('/:id', cheackToken, validObjectId, uploadPhoto.single('photo'), customer.updateCustomer);
 
-router.delete('/:id', validObjectId, customer.deleteCustomer);
+router.delete('/:id', cheackToken, validObjectId, customer.deleteCustomer);
 
 module.exports = router;

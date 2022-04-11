@@ -87,6 +87,8 @@ exports.loginUser = async (req,res,next)=>{
 
                 res.cookie('token',data.token,{expires: new Date(Date.now() + parseInt(process.env.COOKIEEXP)),httpOnly:true, secure:true, signed:true, secret:process.env.COOKIESEC,sameSite:"none" });
 
+                res.cookie('auth','kfjk5kjksdwk23klskj90fj234i209sfj9u4iwej',{expires: new Date(Date.now() + parseInt(process.env.COOKIEEXP)) });
+
                 res.json({status:true,message:'Login successfully.',login:true});
 
             }else{
@@ -96,6 +98,24 @@ exports.loginUser = async (req,res,next)=>{
         }else{
             res.status(401).send({status:false,message:'Authentication failed.',login:false})
         }
+
+    }catch(error){
+        next(error);
+    }
+}
+
+//--------------------------------------------logout User----------------------------------------------------------
+
+
+exports.logoutUser = async (req,res,next)=>{
+    
+    try{
+
+        // const data = await User.findByIdAndUpdate(req.params.id,{$set:{token:''}},{new:true});
+
+        res.clearCookie('token');
+        res.clearCookie('auth');
+        res.send({status:true,message:'Logout successfully.',login:false});
 
     }catch(error){
         next(error);

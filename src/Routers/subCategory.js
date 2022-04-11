@@ -3,17 +3,18 @@ const router = express.Router();
 const subCategory = require('../Controllers/subCategory');
 const uploadPhoto = require('../Middlewares/uploadPhoto');
 const validObjectId = require('../Middlewares/validObjectId');
+const cheackToken = require('../Middlewares/cheackToken');
 
 
 
-router.get('/', subCategory.allSubCategory);
+router.get('/', cheackToken, subCategory.allSubCategory);
 
-router.get('/:id', validObjectId, subCategory.singleSubCategory);
+router.get('/:id', cheackToken, validObjectId, subCategory.singleSubCategory);
 
-router.post('/', uploadPhoto.single('photo'), subCategory.addSubCategory)
+router.post('/', cheackToken, uploadPhoto.single('photo'), subCategory.addSubCategory)
 
-router.put('/:id', validObjectId, uploadPhoto.single('photo'), subCategory.updateSubCategory);
+router.put('/:id', cheackToken, validObjectId, uploadPhoto.single('photo'), subCategory.updateSubCategory);
 
-router.delete('/:id', validObjectId, subCategory.deleteSubCategory);
+router.delete('/:id', cheackToken, validObjectId, subCategory.deleteSubCategory);
 
 module.exports = router;
